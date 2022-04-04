@@ -200,7 +200,7 @@ public class VancouverBusSystem implements Comparable<VancouverBusSystem>
 	{
 
 		double shrstDist = Double.POSITIVE_INFINITY;
-		VancouverBusSystem closeReachableNode = null;
+		NodeWeighted closeReachableNode = null;
 		for (NodeWeighted node : nodeSet) 
 		{
 			if (node.isVisited())
