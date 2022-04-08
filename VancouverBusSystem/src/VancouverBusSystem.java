@@ -2,8 +2,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 public class VancouverBusSystem implements Comparable<VancouverBusSystem>
 {
+	
 	NodeWeighted destination;
 	NodeWeighted src;
 	double weight;
@@ -72,14 +75,12 @@ public class VancouverBusSystem implements Comparable<VancouverBusSystem>
 		{
 			nodeSet.addAll(Arrays.asList(n));
 		}
-
 		public void addEdge(NodeWeighted src, NodeWeighted destination, double weight) 
 		{
 
 			nodeSet.add(src);
 			nodeSet.add(destination);
 
-			// addEdgeHelper to make sure there are no duplicate edges
 			addEdgeHelper(src, destination, weight);
 
 			if (!isDirected && src != destination)
@@ -91,18 +92,15 @@ public class VancouverBusSystem implements Comparable<VancouverBusSystem>
 
 		private void addEdgeHelper(NodeWeighted j, NodeWeighted k, double weight)
 		{
-			// Go through all the edges and see whether that edge has already been added
 			for (VancouverBusSystem edge : j.edgeList) 
 			{
 				if (edge.src == j && edge.destination == k) 
 				{
-					// Update the value 
 					edge.weight = weight;
 					return;
 				}
 			}
 
-			// If it hasn't been added already add the edge
 			j.edgeList.add(new VancouverBusSystem(j, k, weight));
 
 		}
@@ -131,17 +129,14 @@ public class VancouverBusSystem implements Comparable<VancouverBusSystem>
 		HashMap<NodeWeighted, NodeWeighted> changedAt = new HashMap<>();
 		changedAt.put(start, null);
 
-		// Keep track of the shortest path so far for every node
 		HashMap<NodeWeighted, Double> shortestPathMap = new HashMap<>();
 
-		// Setting each node shortest path weight to positive infinity at start and starting node shortest path weight to 0
 		for (NodeWeighted node : nodeSet) 
 		{
 			if (node == start)
 				shortestPathMap.put(start, 0.0);
 			else shortestPathMap.put(node, Double.POSITIVE_INFINITY);
 		}
-		// go through all nodes possible from starting node
 		for (VancouverBusSystem edge : start.edgeList) {
 			shortestPathMap.put(edge.destination, edge.weight);
 			changedAt.put(edge.destination, start);
@@ -195,7 +190,6 @@ public class VancouverBusSystem implements Comparable<VancouverBusSystem>
 			}
 		}
 	}
-
 	private NodeWeighted closestReachableUnvisited(HashMap<NodeWeighted, Double> shrstPMap) 
 	{
 
@@ -240,6 +234,98 @@ public static class Graph
 	static ArrayList<String> fromStop = new ArrayList<>();
 	static ArrayList<String> toStop = new ArrayList<>();
 	static ArrayList<Double> costList = new ArrayList<>();
+	
+	/* public class TernarySearchTree {
+
+	    private class Node {
+	        public char data; 
+	        public Node leftNode;
+	        public Node middNode;
+	        public Node rightNode;
+	        boolean isLast = false;
+
+	        public Node(char data) {
+	            this.data = data;
+	        }
+	    }
+
+	    Node head;
+
+	    public TernarySearchTree() {
+	        head = null;
+	    }
+
+
+	    public void put(String word) {
+	        head = put(head, word, 0);
+	    }
+
+	    private Node put(Node node, String word, int index) {
+	        char letter = word.charAt(index);
+	        if (node == null)
+	            node = new Node(letter);
+	        if (letter < node.data)
+	            node.leftNode = put(node.leftNode, word, index);
+	        else if (letter > node.data)
+	            node.rightNode = put(node.rightNode, word, index);
+	        else if (index < word.length() - 1)
+	            node.middNode = put(node.middNode, word, index + 1);
+	        else
+	            node.isLast = true;
+	        return node;
+	    }
+
+	    public String get(String word) {
+	        return get(head, word, 0, "");
+	    }
+
+	    private String get(Node node, String word, int index, String result) {
+	        if (node == null)
+	            return null;
+	        char letter = word.charAt(index);
+	        if (letter < node.data) {
+	            return get(node.leftNode, word, index, result);
+	        } else if (letter > node.data) {
+	            return get(node.rightNode, word, index, result);
+	        } else if (index < word.length() - 1) {
+	            return get(node.middNode, word, index + 1, result + letter);
+	        } else
+	            return result + letter;
+	    }
+
+	    public String[] getMultiple(String word) {
+	        return getMultiple(head, word, 0, "");
+	    }
+
+	    private String[] getMultiple(Node node, String word, int index, String substring) {
+	        if (node == null)
+	            return null;
+	        char letter = word.charAt(index);
+	        if (letter < node.data) {
+	            return getMultiple(node.leftNode, word, index, substring);
+	        } else if (letter > node.data) {
+	            return getMultiple(node.rightNode, word, index, substring);
+	        } else if (index < word.length() - 1) {
+	            return getMultiple(node.middNode, word, index + 1, substring + letter);
+	        } else {
+	            ArrayList<String> res = new ArrayList<>();
+	            collect(node, substring, res);
+	            return res.toArray(new String[res.size()]);
+	        }
+	    }
+
+	    private void collect(Node node, String substring, ArrayList<String> soFar) {
+	        if (node != null) {
+	            collect(node.leftNode, substring, soFar);
+	            if(node.isLast)
+	                soFar.add(substring + node.data);
+	            collect(node.middNode, substring + node.data, soFar);
+	            collect(node.rightNode, substring, soFar);
+	        }
+	    }
+	}
+
+*/
 
 	public static void parseFile() throws IOException
 	{
@@ -261,7 +347,6 @@ public static class Graph
 			br.close();
 		}
 		{
-			//read through file to make ArrayList of tripData
 			String file2 = "stop_times.txt"; 
 			@SuppressWarnings("resource")
 			BufferedReader br2 = new BufferedReader(new FileReader(file2));
@@ -279,7 +364,6 @@ public static class Graph
 				br.close();
 
 			}
-			//convert stopID to int array
 
 			String[] g = stopID.toArray(new String[0]);
 			for (int i = 0; i < stopID.size(); i++) 
@@ -288,7 +372,6 @@ public static class Graph
 				StopIDint.add(j);
 			}
 
-			//read through file to make ArrayList of tripID stopID and arrival times
 			file = "stop_times.txt"; 
 			BufferedReader br1 = new BufferedReader(new FileReader(file));
 			String line1;
@@ -309,7 +392,6 @@ public static class Graph
 		}
 
 	}
-	//parses transfers.txt and handles cost calculation
 	public static void readTransfers() throws IOException
 	{
 		String file = "transfers.txt"; 
@@ -351,7 +433,6 @@ public static class Graph
 
 
 	}
-	// print time for Q3
 	public static void printTime(String s0) throws IOException
 	{
 		parseFile();	
@@ -372,7 +453,6 @@ public static class Graph
 			} 
 		}else System.out.println("Error, input is not in the accepted format or there are no trips at given time has found.");
 	}
-	//set up for hash map array list graph and creates nodes and edges
 	public static void setup(String busStop1, String busStop2) throws IOException {
 
 		GraphWeighted graphWeighted = new GraphWeighted(true);
@@ -411,7 +491,7 @@ public static class Graph
 		System.out.println("Welcome to the Vancouver Bus System.");
 		do {
 
-			System.out.println("\n Please input \"D\" for dijkstra algorithm or \"S\" for search by time (or enter Quit)");
+			System.out.println("\n Please input \"D\" for dijkstra algorithm or \"S\" for search by time or \"N\" to search for a bus stop by full name or by the first few characters  (or enter Quit)");
 			String checker = input.next();
 			if (checker.equalsIgnoreCase("Quit"))
 			{
@@ -435,6 +515,24 @@ public static class Graph
 				System.out.println("Wait...");
 				setup(busStop1,busStop2);
 			}
+			/*
+			else if (checker.equals("N")) {
+				System.out.println("\nPlease enter the bus stop name or the first few characters: ");
+				String stopName = input.next();	
+				tree = new ArrayList(tripData);
+				Iterable<String> listOfStops = tree.keysWithPrefix(stopName.toUpperCase());
+				findStopsUsingTST(tripData, tree, listOfStops);		
+				//Checks whether valid stop
+				if(tree.checkIfValidStop(listOfStops))
+				{
+					isValid = true;
+				}
+				else
+				{
+					System.out.println("No stops found.\n");
+				}
+			}
+			*/
 			else if (checker.equals("S")){
 				System.out.println("\n Please enter an input as a time to search for in the hh:mm:ss format.");
 				String tmp = input.next();
@@ -463,4 +561,10 @@ public boolean isVisited() {
 }
 
 }
+
+
+
+
+
+
 
