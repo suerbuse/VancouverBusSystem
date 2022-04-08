@@ -491,7 +491,7 @@ public static class Graph
 		System.out.println("Welcome to the Vancouver Bus System.");
 		do {
 
-			System.out.println("\n Please input \"D\" for dijkstra algorithm or \"S\" for search by time or \"N\" to search for a bus stop by full name or by the first few characters  (or enter Quit)");
+			System.out.println("\n Please input \"D\" for dijkstra algorithm or \"S\" for search by time (or enter Quit)");
 			String checker = input.next();
 			if (checker.equalsIgnoreCase("Quit"))
 			{
